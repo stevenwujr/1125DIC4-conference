@@ -1,305 +1,457 @@
-================================================================================
-TARGET VENUE: 7th IEEE International Conference on Electronic Communications,
-Internet of Things and Big Data (ICEIB 2027) — https://www.iceib.asia/
-Format: IEEE Two-Column Conference Style | Writing SOP: 2020 A–Z SOP
-Date/Venue: April 23–25, 2027, Tamkang University, New Taipei, Taiwan (Hybrid)
-Source Basis: Cloned repository 1111/ (DIC3 OpenSpec + Taiwan Housing Agent)
-================================================================================
+% ==============================================================================
+% Target Venue: 7th IEEE International Conference on Electronic Communications,
+% Internet of Things and Big Data (ICEIB 2027) -- https://www.iceib.asia/
+% Format: IEEEtran Conference (Two-Column) | Writing SOP: 2020 A-Z SOP
+% Note: Copy this file directly into Overleaf main.tex (pdfLaTeX compiler).
+% ==============================================================================
+\documentclass[conference]{IEEEtran}
 
-Title:
-Taiwan Housing Intelligence Agent: A Spec-Driven Context-Aware ReAct and RAG Design with Evidence-Gated Safe Stop for Real-Estate Decision Support
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds}
 
-Authors:
-[1st Author Name]*, [2nd Author Name], [3rd Author Name]
-[Department / Graduate Institute], National Chung Hsing University (NCHU)
-Taichung 402, Taiwan
-{[author1], [author2], [author3]}@email.edu.tw
-*Corresponding Author
+\hyphenation{op-tical net-works semi-conduc-tor}
 
---------------------------------------------------------------------------------
-Abstract
---------------------------------------------------------------------------------
-[A: Attention Getter] Residential housing decisions in Taiwan require synthesizing heterogeneous transaction prices, building typologies, floor areas, spatial contexts, and evolving regulatory timelines, making intelligent big-data decision support increasingly critical. [B: But] However, publicly disclosed Actual Price Registration records do not represent complete market conditions, unit prices are easily distorted by bundled parking spaces and area definitions, and single-point predictive models obscure uncertainty, while standard retrieval-augmented generation (RAG) pipelines often produce unsupported claims when retrieved context is insufficient. [C: Cure] To address these challenges, we propose the Taiwan Housing Intelligence Agent, a domain instantiation of the DIC3 (data-driven, context-aware, collaborative decision-support) framework that combines a bounded ReAct orchestrator, versioned domain-knowledge RAG, deterministic transaction-statistics tools, and an explicit Evidence and Safety Gate. [D: Development] Developed via a spec-driven OpenSpec workflow, the proposed design enforces a five-element output contract (value, sample scope, date, source, and limitations) and triggers a deterministic Safe Stop whenever core transaction evidence is missing, expired, or schema-invalid. [E: Experiments] To evaluate our design, we conduct an initial data feasibility audit on the Taichung City Land Administration Bureau Q3 2026 (ROC Year 115 Q3) sales snapshot and establish a two-layer comparative protocol pitting bounded ReAct + RAG against a fixed deterministic workflow under identical queries and sources. [F: Findings] The completed feasibility audit (10,638 raw records across 32 fields; 9,152 filtered residential candidates) confirms a "Conditional Go" data baseline with 61.9% parking-bundled raw records, while live model training and agent benchmarking remain pending protocol execution without fabricated empirical scores.
+\begin{document}
 
-Index Terms—Actual Price Registration, AI agent, context-aware decision support, evidence gate, explainable AI, real-estate valuation, ReAct, retrieval-augmented generation (RAG), safe stop, spec-driven design.
+\title{Taiwan Housing Intelligence Agent: A Spec-Driven Context-Aware ReAct and RAG Design with Evidence-Gated Safe Stop for Real-Estate Decision Support}
 
---------------------------------------------------------------------------------
-I. INTRODUCTION
---------------------------------------------------------------------------------
-[G: General] With the rapid expansion of urban open data, geospatial big data analytics, and large language model (LLM) agents, data-driven decision-support systems have achieved substantial progress across complex real-world domains. Within the DIC3 (data-driven, context-aware, collaborative decision-support) paradigm, modern analytical systems are expected to fuse heterogeneous records, temporal dynamics, and institutional constraints while preserving human oversight and accountability. In Taiwan's residential market, buyers, analysts, and researchers increasingly rely on public Actual Price Registration records to evaluate district price levels, building-type distributions, and temporal trends.
+\author{
+\IEEEauthorblockN{First Author\IEEEauthorrefmark{1}, Second Author\IEEEauthorrefmark{1}, and Third Author\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Department / Graduate Institute, National Chung Hsing University (NCHU), Taichung 402, Taiwan\\
+Email: \{author1, author2, author3\}@email.edu.tw}
+}
 
-[H: However] However, transforming raw public transaction disclosures into trustworthy residential decision support presents severe technical and epistemic challenges. First, disclosed transaction prices are conditional historical observations rather than a complete, real-time census of market equilibrium; identical nominal prices frequently correspond to divergent floor areas, floor levels, parking allocations, and disclosure timings. Second, conventional machine learning valuation models typically output a single point estimate without disclosing sample boundaries, unit definitions, or epistemic uncertainty. Third, although integrating LLMs with retrieval-augmented generation (RAG) enables natural-language querying over both numerical tables and regulatory texts, unconstrained RAG agents frequently hallucinate or extrapolate unsupported price claims when retrieved context lacks sufficiency, spatial granularity, or temporal validity.
+\maketitle
 
-[I: In Literature] Prior research addressing these issues spans two major categories, progressing from classical statistical appraisal toward multimodal deep learning and agentic tool orchestration. In real-estate analytics, early hedonic and mass-appraisal models evolved into deep learning frameworks fusing heterogeneous transaction, spatial, and street-view imagery features [1]–[3], spatiotemporal mass appraisal [4], Taiwan macroeconomic and tax-policy analyses [5], [6], causal factor selection [7], post-hoc explainability via SHAP [8], and specialized spatiotemporal resampling and cross-validation strategies [9], [10]. In parallel, LLM grounding and agentic reasoning progressed from non-parametric RAG [11] and interleaved ReAct loops [12] to self-supervised tool learning [13], multi-model orchestration [14], structured planning [15], [16], self-reflection [17], tree search [18], and parallel function calling [19], culminating in domain-specific real-estate agents and LLM benchmarks [20], [21].
+\begin{abstract}
+% [A: Attention Getter]
+Residential housing decisions in Taiwan require synthesizing heterogeneous transaction prices, building typologies, floor areas, spatial contexts, and evolving regulatory timelines, making intelligent big-data decision support increasingly critical.
+% [B: But]
+However, publicly disclosed Actual Price Registration records do not represent complete market conditions, unit prices are easily distorted by bundled parking spaces and area definitions, and single-point predictive models obscure uncertainty, while standard retrieval-augmented generation (RAG) pipelines often emit unsupported claims when retrieved context is insufficient.
+% [C: Cure]
+To address these challenges, we propose the Taiwan Housing Intelligence Agent (THIA), a domain instantiation of the DIC3 (data-driven, context-aware, collaborative decision-support) framework that integrates a bounded ReAct orchestrator, versioned domain-knowledge RAG, deterministic transaction-statistics tools, and an explicit Evidence and Safety Gate.
+% [D: Development]
+Developed via a spec-driven OpenSpec workflow, the proposed design enforces a five-element output contract (value, sample scope, date, source, and limitations) and triggers a deterministic Safe Stop whenever core transaction evidence is missing, expired, or schema-invalid.
+% [E: Experiments]
+To evaluate our design, we conduct an empirical data feasibility audit on the Taichung City Land Administration Bureau Q3 2026 (ROC Year 115 Q3) sales snapshot and establish a two-layer comparative protocol pitting bounded ReAct + RAG against a fixed deterministic workflow under identical queries and sources.
+% [F: Findings]
+The completed feasibility audit (10,638 raw records across 32 fields; 9,152 filtered residential candidates) confirms a ``Conditional Go'' data baseline in which 61.9\% of raw records bundle parking spaces, while live model training and agent benchmarking remain pending protocol execution without fabricated empirical scores.
+\end{abstract}
 
-[J: Judgement] Evaluating both categories reveals complementary strengths and weaknesses. Quantitative valuation models achieve strong predictive fit on structured benchmarks but offer weak conversational adaptability, risk data leakage under naive random splits, and provide feature attributions that users often mistake for causal effects. Conversely, general-purpose LLM agents excel at flexible multi-step tool routing, yet suffer from latency overhead, unbounded reasoning loops, and unsafe generation when domain schemas, measurement units, or effective dates fail. Meanwhile, rigidly scripted query workflows guarantee deterministic execution but may lack flexibility on multi-condition queries—raising the testable research question of whether bounded ReAct + RAG outperforms a fixed workflow under identical data and governance rules.
+\begin{IEEEkeywords}
+Actual Price Registration, AI agent, context-aware decision support, evidence gate, explainable AI, real-estate valuation, ReAct, retrieval-augmented generation (RAG), safe stop, spec-driven design.
+\end{IEEEkeywords}
 
-[K: Keypoint] Guided by this assessment, the novelty of our proposed design lies in uniting spec-driven engineering (OpenSpec) with a safety-gated agentic architecture. Specifically, our core contributions are summarized as follows:
-1) A spec-driven DIC3 system architecture integrating a bounded ReAct orchestrator (MAX_REACT_STEPS = 6), deterministic transaction-statistics tools, and versioned regulatory RAG;
-2) An explicit Evidence and Safety Gate coupled with a Safe Stop abstention mechanism and a mandatory five-part cited output contract (value, sample scope, date, source, and limitations);
-3) An audited empirical data feasibility baseline derived from the Taichung City Q3 2026 (ROC Year 115 Q3) official sales CSV snapshot (10,638 raw records; 9,152 residential candidates), establishing a "Conditional Go" governance posture;
-4) A falsifiable two-layer evaluation protocol comparing bounded ReAct + RAG against a fixed workflow without fabricating unexecuted experimental outcomes.
+\section{Introduction}
+% [G: General]
+With the rapid expansion of urban open data, geospatial big data analytics, and large language model (LLM) agents, data-driven decision-support systems have achieved substantial progress across complex real-world domains. Within the DIC3 (data-driven, context-aware, collaborative decision-support) paradigm, modern analytical systems are expected to fuse heterogeneous records, temporal dynamics, and institutional constraints while preserving human oversight and accountability. In Taiwan's residential market, buyers, analysts, and researchers increasingly rely on public Actual Price Registration records to evaluate district price levels, building-type distributions, and temporal trends.
 
-[L: List Organization] The remainder of this paper is organized as follows. Section II reviews related methods in real-estate valuation and agentic AI and organizes them in a comparative summary table. Section III presents the proposed design across problem framing, system architecture, bounded execution workflow, an illustrative walkthrough example, and mathematical formulation. Section IV details the experimental design, performance metrics, completed Taichung City data feasibility audit, and verification protocol. Section V summarizes the contributions, operational boundaries, and future research directions.
+% [H: However]
+However, transforming raw public transaction disclosures into trustworthy residential decision support presents severe technical and epistemic challenges. First, disclosed transaction prices are conditional historical observations rather than a complete, real-time census of market equilibrium; identical nominal prices frequently correspond to divergent floor areas, floor levels, parking allocations, and disclosure timings. Second, conventional machine learning valuation models typically output a single point estimate without disclosing sample boundaries, unit definitions, or epistemic uncertainty. Third, although integrating LLMs with retrieval-augmented generation (RAG) enables natural-language querying over both numerical tables and regulatory texts, unconstrained RAG agents frequently hallucinate or extrapolate unsupported price claims when retrieved context lacks sufficiency, spatial granularity, or temporal validity.
 
---------------------------------------------------------------------------------
-II. RELATED WORK
---------------------------------------------------------------------------------
-[M: Methods] Existing literature relevant to this study falls into two evolutionary tracks, moving from foundational statistical techniques to complex multi-agent and multimodal architectures:
+% [I: In Literature]
+Prior research addressing these issues spans two major categories, progressing from classical statistical appraisal toward multimodal deep learning and agentic tool orchestration. In real-estate analytics, early hedonic and mass-appraisal models evolved into deep learning frameworks fusing heterogeneous transaction, spatial, and street-view imagery features~\cite{wang2021,chiu2022,wang2023}, spatiotemporal mass appraisal~\cite{chou2023}, Taiwan macroeconomic and tax-policy analyses~\cite{hung2025,yang2025}, causal factor selection~\cite{chang2025}, post-hoc explainability via SHAP~\cite{lundberg2017}, and specialized spatiotemporal resampling and cross-validation strategies~\cite{roberts2017,ecker2022}. In parallel, LLM grounding and agentic reasoning progressed from non-parametric RAG~\cite{lewis2020} and interleaved ReAct loops~\cite{yao2023react} to self-supervised tool learning~\cite{schick2023}, multi-model orchestration~\cite{shen2023}, structured planning~\cite{wang2023plan,xu2023}, self-reflection~\cite{shinn2023}, tree search~\cite{yao2023tot}, and parallel function calling~\cite{kim2024}, culminating in domain-specific real-estate agents and LLM benchmarks~\cite{haurum2024,zhu2025}.
 
-1) Real-Estate Valuation, Spatial-Temporal Validation, and Explainability: Traditional appraisal relies on comparable sales and hedonic pricing, which newer studies augment with multi-source machine learning. Wang et al. [1] combined heterogeneous transaction attributes with location and visual features via a joint self-attention mechanism, while Chiu et al. [2] designed a lightweight spatiotemporal deep learning model and Wang [3] incorporated Google Street View environmental features. Chou et al. [4] examined mass appraisal under joint space-time dynamics. Within Taiwan's Actual Price Registration context [22], Hung et al. [5] analyzed urban housing price indices against macroeconomic variables, Yang [6] evaluated special tax-cooling policies, and recent local studies [23], [24] applied machine learning to Taiwan transaction records. Crucially, because housing data exhibit spatiotemporal dependence, Roberts et al. [9] and Ecker and Isakson [10] demonstrated that block and temporal validation splits are essential to avoid optimistic leakage. For interpretability, Lundberg and Lee [8] introduced SHAP for additive feature attribution, though attribution remains distinct from causal identification as noted in recent causal-agent work [7].
+% [J: Judgement]
+Evaluating both categories reveals complementary strengths and weaknesses. Quantitative valuation models achieve strong predictive fit on structured benchmarks but offer weak conversational adaptability, risk data leakage under naive random splits, and provide feature attributions that users often mistake for causal effects. Conversely, general-purpose LLM agents excel at flexible multi-step tool routing, yet suffer from latency overhead, unbounded reasoning loops, and unsafe generation when domain schemas, measurement units, or effective dates fail. Meanwhile, rigidly scripted query workflows guarantee deterministic execution but may lack flexibility on multi-condition queries---raising the testable research question of whether bounded ReAct + RAG outperforms a fixed workflow under identical data and governance rules.
 
-2) LLM Grounding, Tool-Use Agents, and Domain Benchmarks: To mitigate parametric hallucination, Lewis et al. [11] introduced RAG, and Yao et al. [12] proposed ReAct to interleave reasoning traces with executable actions. Subsequent frameworks expanded tool autonomy and planning efficiency, including Toolformer [13], HuggingGPT [14], Plan-and-Solve [15], ReWOO [16], Reflexion [17], Tree of Thoughts [18], and LLM Compiler [19]. Specifically targeting real estate, Haurum et al. [20] prototyped a LangChain-based property information agent, while Zhu and Han [21] proposed the REAL benchmark to evaluate LLM competence across housing services.
+% [K: Keypoint]
+Guided by this assessment, the novelty of our proposed design lies in uniting spec-driven engineering (OpenSpec) with a safety-gated agentic architecture. Specifically, our core contributions are fourfold:
+\begin{enumerate}
+    \item A spec-driven DIC3 system architecture integrating a bounded ReAct orchestrator (\texttt{MAX\_REACT\_STEPS = 6}), deterministic transaction-statistics tools, and versioned regulatory RAG;
+    \item An explicit Evidence and Safety Gate coupled with a Safe Stop abstention mechanism and a mandatory five-part cited output contract (value, sample scope, date, source, and limitations);
+    \item An audited empirical data feasibility baseline derived from the Taichung City Q3 2026 (ROC Year 115 Q3) official sales CSV snapshot (10,638 raw records; 9,152 residential candidates), establishing a ``Conditional Go'' governance posture;
+    \item A falsifiable two-layer evaluation protocol comparing bounded ReAct + RAG against a fixed workflow without fabricating unexecuted experimental outcomes.
+\end{enumerate}
 
-[N: New Proposed] Despite steady progress in both tracks, a critical operational gap persists: existing valuation models rarely enforce conversational provenance or abstention, whereas general-purpose LLM agents lack domain-specific schema audits for Taiwan's real-estate disclosures (such as parking-space unbundling, ROC year-month cohort semantics, and district-level de-identification). Our proposed design bridges this gap not by claiming unconstrained agent superiority, but by introducing an auditable Evidence and Safety Gate that enforces deterministic computation and Safe Stop abstention, enabling a fair head-to-head comparison between bounded ReAct + RAG and a fixed deterministic workflow.
+% [L: List Organization]
+The remainder of this paper is organized as follows. Section~II reviews related methods in real-estate valuation and agentic AI and organizes them in a comparative summary table. Section~III presents the proposed design across problem framing, system architecture, bounded execution workflow, an illustrative walkthrough example, and mathematical formulation. Section~IV details the experimental design, performance metrics, completed Taichung City data feasibility audit, and verification protocol. Section~V summarizes the contributions, operational boundaries, and future research directions.
 
-[O: Organize] Table I organizes representative studies across methodology, domain knowledge, dataset context, key findings, strengths/weaknesses, and limitations relative to our proposed scheme.
+\section{Related Work}
+% [M: Methods]
+Existing literature relevant to this study falls into two evolutionary tracks, moving from foundational statistical techniques to complex multi-agent and multimodal architectures.
 
-TABLE I
-COMPARATIVE SUMMARY OF REPRESENTATIVE LITERATURE AND THE PROPOSED SCHEME (ARTICLE SUMMARY TABLE)
-+----------------------+------+--------------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+
-| Ref.                 | Year | Problem                              | AI / Analytical Method            | Domain Knowledge                  | Dataset                           | Findings / Strengths              | Limitation / Gap                  |
-+----------------------+------+--------------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+
-| Roberts et al. [9]   | 2017 | Validation under dependence          | Spatial/temporal/hierarchical CV  | Autocorrelation & leakage control | Spatial-temporal benchmarks       | Random CV underestimates error    | Validation method only; no agent  |
-| Lundberg & Lee [8]   | 2017 | Model interpretability               | SHAP additive attributions        | Game-theoretic feature axioms     | Multi-domain ML benchmarks        | Unified local/global explanation  | Attribution != causal effect      |
-| Lewis et al. [11]    | 2020 | Knowledge-intensive QA grounding     | Retrieval-Augmented Generation    | Non-parametric text retrieval     | Wikipedia / QA benchmarks         | Reduces parametric hallucination  | Weak abstention on sparse context |
-| Wang et al. [1]      | 2021 | Multimodal house price prediction    | Joint self-attention deep model   | Transaction + visual + location   | Multi-source housing records      | Multimodal fusion improves fit    | Point prediction; high data needs |
-| Ecker & Isakson [10] | 2022 | Appraisal resampling stability       | Housing sales resampling / CV     | Property tax & sales timing       | Residential sales transactions    | Split choice alters error bounds  | Non-conversational batch model    |
-| Chou et al. [4]      | 2023 | Spatiotemporal mass appraisal        | Space-time appraisal modeling     | Dynamic valuation heterogeneity   | Housing transaction data          | Models temporal/spatial drift     | Lacks regulatory text & citation  |
-| Yao et al. [12]      | 2023 | Grounded reasoning and tool acting   | ReAct Thought-Action-Obs loop     | Environment action grounding      | HotpotQA, FEVER, WebShop          | Interleaved grounding cuts errors | Unbounded loops risk cost/failure |
-| Haurum et al. [20]   | 2024 | Conversational real-estate QA        | LangChain multi-tool AI agent     | Property search & QA workflows    | Real-estate listing/domain data   | Validates agentic housing UX      | No Taiwan schema/parking/SafeStop |
-| Hung et al. [5]      | 2025 | Taiwan macro housing dynamics        | Econometric index modeling        | Taiwan price indices & macro vars | Taiwan urban housing series       | Quantifies macro index linkages   | Cannot answer unit-level queries  |
-| Chang et al. [7]     | 2025 | Causal factor selection in housing   | AI agent + causal inference       | Societal housing determinants     | Residential housing datasets      | Integrates causal selection       | Needs strict cohort consistency   |
-| Zhu & Han [21]       | 2025 | Real-estate LLM evaluation           | REAL multi-task LLM benchmark     | Housing transaction services      | Real-estate service tasks         | Exposes domain reasoning gaps     | Outside Taiwan registration rules |
-| Proposed (THIA)      | 2027 | Trustworthy Taiwan housing support   | Bounded ReAct + RAG + Evid. Gate  | Taiwan Actual Price Reg. rules    | Taichung 115 Q3 (10,638 -> 9,152) | Auditable 5-part output/Safe Stop | Live benchmark runs pending       |
-+----------------------+------+--------------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+
+\subsection{Real-Estate Valuation, Spatial-Temporal Validation, and Explainability}
+Traditional appraisal relies on comparable sales and hedonic pricing, which newer studies augment with multi-source machine learning. Wang et al.~\cite{wang2021} combined heterogeneous transaction attributes with location and visual features via a joint self-attention mechanism, while Chiu et al.~\cite{chiu2022} designed a lightweight spatiotemporal deep learning model and Wang~\cite{wang2023} incorporated Google Street View environmental features. Chou et al.~\cite{chou2023} examined mass appraisal under joint space-time dynamics. Within Taiwan's Actual Price Registration context~\cite{moi2026}, Hung et al.~\cite{hung2025} analyzed urban housing price indices against macroeconomic variables, Yang~\cite{yang2025} evaluated special tax-cooling policies, and recent local studies~\cite{lin2024,chang2024} applied machine learning to Taiwan transaction records. Crucially, because housing data exhibit spatiotemporal dependence, Roberts et al.~\cite{roberts2017} and Ecker and Isakson~\cite{ecker2022} demonstrated that block and temporal validation splits are essential to avoid optimistic leakage. For interpretability, Lundberg and Lee~\cite{lundberg2017} introduced SHAP for additive feature attribution, though attribution remains distinct from causal identification as noted in recent causal-agent work~\cite{chang2025}.
 
---------------------------------------------------------------------------------
-III. PROPOSED DESIGN
---------------------------------------------------------------------------------
-A. Aim and Problem Statement (PA)
-The primary aim of the Taiwan Housing Intelligence Agent (THIA) is to design and evaluate a controllable, context-aware decision-support system for Taiwan residential queries that integrates structured transaction records, versioned domain documentation, and bounded tool orchestration. Formally, given a user query regarding a specified administrative district, period, building type, and comparable conditions, the system must produce an answer with traceable provenance and explicit limitations—or safely degrade without fabricating a price claim when core evidence is insufficient.
+\subsection{LLM Grounding, Tool-Use Agents, and Domain Benchmarks}
+To mitigate parametric hallucination, Lewis et al.~\cite{lewis2020} introduced RAG, and Yao et al.~\cite{yao2023react} proposed ReAct to interleave reasoning traces with executable actions. Subsequent frameworks expanded tool autonomy and planning efficiency, including Toolformer~\cite{schick2023}, HuggingGPT~\cite{shen2023}, Plan-and-Solve~\cite{wang2023plan}, ReWOO~\cite{xu2023}, Reflexion~\cite{shinn2023}, Tree of Thoughts~\cite{yao2023tot}, and LLM Compiler~\cite{kim2024}. Specifically targeting real estate, Haurum et al.~\cite{haurum2024} prototyped a LangChain-based property information agent, while Zhu and Han~\cite{zhu2025} proposed the REAL benchmark to evaluate LLM competence across housing services.
 
-B. Background, Benefits, and Cure Rationale (PB, PC)
-In operational housing environments, fragmented signals and unverified LLM outputs create tangible decision risks. Basing our architecture on the DIC3 OpenSpec workflow (Ingest -> Frame -> Model -> Verify -> Deploy -> Iterate) provides three direct benefits: (1) explicit requirement traceability prior to code execution; (2) strict separation between deterministic numerical calculation and natural-language synthesis; and (3) enforced governance over data recency and spatial granularity.
+% [N: New Proposed]
+\subsection{Research Gap and Comparative Summary}
+Despite steady progress in both tracks, a critical operational gap persists: existing valuation models rarely enforce conversational provenance or abstention, whereas general-purpose LLM agents lack domain-specific schema audits for Taiwan's real-estate disclosures (such as parking-space unbundling, ROC year-month cohort semantics, and district-level de-identification). Our proposed design bridges this gap not by claiming unconstrained agent superiority, but by introducing an auditable Evidence and Safety Gate that enforces deterministic computation and Safe Stop abstention, enabling a fair head-to-head comparison between bounded ReAct + RAG and a fixed deterministic workflow.
 
-The cure rationale targets three failure modes observed in prior systems:
-1) To cure single-point price overconfidence, outputs must follow a fixed five-part specification: Value/Range + Sample Scope + Date + Source + Limitations.
-2) To cure unconstrained RAG hallucination, an Evidence and Safety Gate audits schema, unit, provenance, and effective dates prior to generation.
-3) To cure unbounded agent execution, the ReAct loop is constrained to whitelisted tools and a strict step budget (MAX_REACT_STEPS = 6).
+% [O: Organize]
+Table~\ref{tab:related_summary} organizes representative studies across methodology, domain knowledge, dataset context, key findings, and limitations relative to our proposed scheme.
 
-C. Design Paradigm and Core System Elements (PD, PE)
-The proposed design shifts the paradigm from "LLM-generated valuation" to "spec-driven, evidence-gated decision orchestration," governed by five design principles: (1) task-first validation before split selection; (2) conditional price semantics; (3) granularity-aligned answer scope; (4) separation of SHAP attribution from causal claims; and (5) versioned, time-stamped evidence provenance.
+\begin{table*}[!t]
+\centering
+\caption{Comparative Summary of Representative Literature and the Proposed Scheme}
+\label{tab:related_summary}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}p{1.9cm}c>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Ref.} & \textbf{Year} & \textbf{Problem} & \textbf{AI / Analytical Method} & \textbf{Domain Knowledge} & \textbf{Dataset} & \textbf{Findings / Strengths} & \textbf{Limitation / Gap} \\
+\midrule
+Roberts et al.~\cite{roberts2017} & 2017 & Validation under dependence & Spatial, temporal, hierarchical CV & Autocorrelation \& leakage control & Spatial-temporal benchmarks & Random CV underestimates error & Validation method only; no agent \\
+Lundberg \& Lee~\cite{lundberg2017} & 2017 & Model interpretability & SHAP additive attributions & Game-theoretic feature axioms & Multi-domain ML benchmarks & Unified local/global explanation & Attribution is not causal effect \\
+Lewis et al.~\cite{lewis2020} & 2020 & Knowledge-intensive QA grounding & Retrieval-Augmented Generation & Non-parametric text retrieval & Wikipedia / QA benchmarks & Reduces parametric hallucination & Weak abstention on sparse context \\
+Wang et al.~\cite{wang2021} & 2021 & Multimodal house price prediction & Joint self-attention deep model & Transaction, visual, location & Multi-source housing records & Multimodal fusion improves fit & Point prediction; high data needs \\
+Ecker \& Isakson~\cite{ecker2022} & 2022 & Appraisal resampling stability & Housing sales resampling / CV & Property tax \& sales timing & Residential sales transactions & Split choice alters error bounds & Non-conversational batch model \\
+Chou et al.~\cite{chou2023} & 2023 & Spatiotemporal mass appraisal & Space-time appraisal modeling & Dynamic valuation heterogeneity & Housing transaction data & Models temporal/spatial drift & Lacks regulatory text \& citation \\
+Yao et al.~\cite{yao2023react} & 2023 & Grounded reasoning and acting & ReAct Thought-Action-Obs loop & Environment action grounding & HotpotQA, FEVER, WebShop & Interleaved grounding cuts errors & Unbounded loops risk cost/failure \\
+Haurum et al.~\cite{haurum2024} & 2024 & Conversational real-estate QA & LangChain multi-tool AI agent & Property search \& QA workflows & Real-estate listing/domain data & Validates agentic housing UX & No Taiwan schema/parking/SafeStop \\
+Hung et al.~\cite{hung2025} & 2025 & Taiwan macro housing dynamics & Econometric index modeling & Taiwan price indices \& macro vars & Taiwan urban housing series & Quantifies macro index linkages & Cannot answer unit-level queries \\
+Chang et al.~\cite{chang2025} & 2025 & Causal factor selection & AI agent + causal inference & Societal housing determinants & Residential housing datasets & Integrates causal selection & Needs strict cohort consistency \\
+Zhu \& Han~\cite{zhu2025} & 2025 & Real-estate LLM evaluation & REAL multi-task LLM benchmark & Housing transaction services & Real-estate service tasks & Exposes domain reasoning gaps & Outside Taiwan registration rules \\
+Proposed (THIA) & 2027 & Trustworthy Taiwan housing support & Bounded ReAct + RAG + Evid. Gate & Taiwan Actual Price Reg. rules & Taichung 115 Q3 (10,638$\rightarrow$9,152) & Auditable 5-part output/Safe Stop & Live benchmark runs pending \\
+\bottomrule
+\end{tabularx}
+\end{table*}
 
-Six modular elements (PE) constitute the system, summarized in Table II:
-- Query Validation Layer: Parses natural-language input into a typed query (district, time window, building typology, area) and rejects out-of-scope requests (personal financial advice, guaranteed transaction prices, or individual tax/legal counsel).
-- ReAct Orchestrator: Executes a bounded Thought–Action–Observation loop restricted to whitelisted tools and at most one transient retry.
-- Structured Transaction Tools: Performs deterministic filtering, sample counting, descriptive statistics, and optional baseline estimation over approved CSV/database snapshots.
-- RAG Domain-Knowledge Store: Retrieves MOI/land-bureau data dictionaries, parking-adjustment rules, and policy briefs tagged with source ID, version, and effective date.
-- Evidence and Safety Gate: Validates schema integrity, unit consistency, provenance, temporal validity, and sample adequacy; quarantines invalid or failed optional outputs (e.g., GIS/ML modules) so they cannot contaminate core transaction comparisons.
-- Cited Response / Safe Stop Module: Renders the five-element cited answer when evidence passes the gate, or executes a Safe Stop explaining the exact data gap.
+\section{Proposed Design}
+% [PA: Aim]
+\subsection{Aim and Problem Statement}
+The primary aim of the Taiwan Housing Intelligence Agent (THIA) is to design and evaluate a controllable, context-aware decision-support system for Taiwan residential queries that integrates structured transaction records, versioned domain documentation, and bounded tool orchestration. Formally, given a user query regarding a specified administrative district, time period, building typology, and comparable conditions, the system must produce an answer with traceable provenance and explicit limitations---or safely degrade without fabricating a price claim when core evidence is insufficient.
 
-TABLE II
-CORE SYSTEM ELEMENTS, RESPONSIBILITIES, AND SAFETY CONSTRAINTS
-+---------------------------+----------------------------------------------+----------------------------------------------+
-| System Element            | Functional Responsibility                    | Governance & Safety Constraints              |
-+---------------------------+----------------------------------------------+----------------------------------------------+
-| Query Validation Layer    | Parse NL query into typed parameters         | Clarify missing fields; block out-of-scope   |
-| ReAct Orchestrator        | Bounded Thought-Action-Observation routing   | Whitelist only; MAX_REACT_STEPS = 6; retry<=1|
-| Structured Data Tools     | Filter, count, and compute sample statistics | Deterministic code computation only (no LLM) |
-| RAG Knowledge Store       | Retrieve rules, schemas, and policy docs     | Require source, version, and effective date  |
-| Evidence & Safety Gate    | Audit schema, unit, source, date, and scope  | Quarantine invalid/optional tool failures    |
-| Cited Response/Safe Stop  | Format 5-part output or trigger abstention   | No price claim without valid core evidence   |
-+---------------------------+----------------------------------------------+----------------------------------------------+
+% [PB: Based on / Benefit, PC: Cure / Cause]
+\subsection{Background, Benefits, and Cure Rationale}
+In operational housing environments, fragmented signals and unverified LLM outputs create tangible decision risks. Grounding our architecture in the DIC3 OpenSpec workflow ($\text{Ingest} \rightarrow \text{Frame} \rightarrow \text{Model} \rightarrow \text{Verify} \rightarrow \text{Deploy} \rightarrow \text{Iterate}$) yields three direct benefits: (1) explicit requirement traceability prior to code execution; (2) strict separation between deterministic numerical computation and natural-language synthesis; and (3) enforced governance over data recency and spatial granularity.
 
-D. Functional Foundation and System Architecture (PF, PG)
-Figure 1 depicts the layered architecture (PG) linking user interaction, orchestration, dual evidence backends, and the Evidence and Safety Gate.
+The cure rationale directly addresses three failure modes observed in prior systems:
+\begin{enumerate}
+    \item To cure single-point price overconfidence, outputs must follow a fixed five-part specification: Value/Range, Sample Scope, Date, Source, and Limitations.
+    \item To cure unconstrained RAG hallucination, an Evidence and Safety Gate audits schema, unit, provenance, and effective dates prior to generation.
+    \item To cure unbounded agent execution, the ReAct loop is constrained to whitelisted tools and a strict step budget (\texttt{MAX\_REACT\_STEPS = 6}).
+\end{enumerate}
 
-  +-----------------------------------------------------------------------+
-  |                       USER & DECISION INTERFACE                       |
-  |  [Natural Language Query]  <--->  [5-Part Cited Output / Safe Stop]   |
-  +-----------------------------------+-----------------------------------+
-                                      |
-                                      v
-  +-----------------------------------------------------------------------+
-  |                  QUERY VALIDATION & TYPED CONTRACT                    |
-  |  Extract: {District, Period, Building Type, Area, Comparable Rules}   |
-  |  Guard: Reject financial/legal/guaranteed-price requests              |
-  +-----------------------------------+-----------------------------------+
-                                      |
-                                      v
-  +-----------------------------------------------------------------------+
-  |             BOUNDED ReAct ORCHESTRATOR (MAX_REACT_STEPS = 6)          |
-  |  Whitelisted Action Selector | Transient Retry <= 1 | Fallback Check  |
-  +-------------------+-------------------------------+-------------------+
-                      |                               |
-         (Structured Data Branch)               (Knowledge Branch)
-                      v                               v
-  +-------------------------------+   +-----------------------------------+
-  | STRUCTURED TRANSACTION TOOLS  |   |     RAG DOMAIN-KNOWLEDGE STORE    |
-  | - Approved CSV/DB Filtering   |   | - Official Data Dictionaries      |
-  | - Deterministic Stats Engine  |   | - Parking & Area Adjustment Rules |
-  | - Optional Baseline ML / GIS  |   | - Version & Effective-Date Tags   |
-  +-------------------+-----------+   +---------------+-------------------+
-                      |                               |
-                      +---------------+---------------+
-                                      |
-                                      v
-  +-----------------------------------------------------------------------+
-  |                       EVIDENCE & SAFETY GATE                          |
-  |  Audit: Schema | Measurement Unit | Provenance | Timeliness | Scope   |
-  |  Quarantine invalid results; isolate optional GIS/ML errors           |
-  +-------------------+-------------------------------+-------------------+
-                      | (Pass: Valid Core Evidence)   | (Fail: Missing/Invalid)
-                      v                               v
-        [Cited Response Synthesis]             [Safe Stop Abstention]
-        (Value+Scope+Date+Source+Limits)       (No Price Claim + Gap Report)
+% [PD: Design Paradigm, PE: Paper Elements]
+\subsection{Design Paradigm and Core System Elements}
+The proposed design shifts the paradigm from ``LLM-generated valuation'' to ``spec-driven, evidence-gated decision orchestration,'' governed by five design principles: (1) task-first validation before split selection; (2) conditional price semantics; (3) granularity-aligned answer scope; (4) separation of SHAP attribution from causal claims; and (5) versioned, time-stamped evidence provenance.
 
-  Fig. 1. Layered system architecture of the Taiwan Housing Intelligence Agent (PG).
+Six modular elements constitute the system, summarized in Table~\ref{tab:elements}:
+\begin{itemize}
+    \item \emph{Query Validation Layer}: Parses natural-language input into a typed query (district, time window, building typology, area) and rejects out-of-scope requests (personal financial advice, guaranteed transaction prices, or individual tax/legal counsel).
+    \item \emph{ReAct Orchestrator}: Executes a bounded Thought--Action--Observation loop restricted to whitelisted tools and at most one transient retry.
+    \item \emph{Structured Transaction Tools}: Performs deterministic filtering, sample counting, descriptive statistics, and optional baseline estimation over approved CSV/database snapshots.
+    \item \emph{RAG Domain-Knowledge Store}: Retrieves MOI/land-bureau data dictionaries, parking-adjustment rules, and policy briefs tagged with source ID, version, and effective date.
+    \item \emph{Evidence and Safety Gate}: Validates schema integrity, unit consistency, provenance, temporal validity, and sample adequacy; quarantines invalid or failed optional outputs (e.g., GIS/ML modules) so they cannot contaminate core transaction comparisons.
+    \item \emph{Cited Response / Safe Stop Module}: Renders the five-element cited answer when evidence passes the gate, or executes a Safe Stop explaining the exact data gap.
+\end{itemize}
 
-E. Operational Mechanism and Implementation Workflow (PH, PI)
-To achieve reliable decision support (PH), every query traverses a deterministic pre-check, a bounded tool-routing loop, a mandatory gate audit, and an audited output renderer (PI). Figure 2 illustrates the execution flow, and Algorithm 1 specifies the bounded 8-step control pseudocode (summarized from the repository's 30-line authoritative specification).
+\begin{table}[!t]
+\centering
+\caption{Core System Elements, Responsibilities, and Safety Constraints}
+\label{tab:elements}
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\columnwidth}{@{}p{2.2cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{System Element} & \textbf{Functional Responsibility} & \textbf{Governance \& Safety Constraints} \\
+\midrule
+Query Validation Layer & Parse NL query into typed parameters & Clarify missing fields; block out-of-scope \\
+ReAct Orchestrator & Bounded Thought-Action-Observation routing & Whitelist only; \texttt{MAX\_REACT\_STEPS = 6}; retry $\le 1$ \\
+Structured Data Tools & Filter, count, and compute sample statistics & Deterministic code computation only (no LLM) \\
+RAG Knowledge Store & Retrieve rules, schemas, and policy docs & Require source, version, and effective date \\
+Evidence \& Safety Gate & Audit schema, unit, source, date, and scope & Quarantine invalid/optional tool failures \\
+Cited Response / Safe Stop & Format 5-part output or trigger abstention & No price claim without valid core evidence \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
-  Query -> Condition Check -> ReAct Tool Selection -> [Structured Tools | RAG]
-        -> Result Validation -> Deterministic Stats -> Evidence Gate
-        -> {Pass: Cited Answer with Limitations | Fail: Safe Stop}
+% [PF: Foundation, PG: Graph]
+\subsection{Functional Foundation and System Architecture}
+Fig.~\ref{fig:arch} depicts the layered architecture linking user interaction, bounded orchestration, dual evidence backends, and the Evidence and Safety Gate.
 
-  Fig. 2. End-to-end operational processing workflow (PI).
+\begin{figure*}[!t]
+\centering
+\begin{tikzpicture}[
+    node distance=0.55cm and 0.9cm,
+    box/.style={draw, rounded corners=2pt, align=center, font=\scriptsize, fill=gray!6, inner sep=5pt, minimum height=0.85cm},
+    wide/.style={box, text width=11.8cm},
+    half/.style={box, text width=5.4cm},
+    arr/.style={-{Stealth[length=2.2mm]}, semithick}
+]
+\node[wide] (ui) {\textbf{User \& Decision Interface}\\Natural Language Query $\longleftrightarrow$ 5-Part Cited Output / Safe Stop Notice};
+\node[wide, below=of ui] (qv) {\textbf{Query Validation \& Typed Contract}\\Extract: \{District, Period, Building Type, Area, Comparable Rules\} $\mid$ Guard: Reject personal finance / legal / guaranteed-price queries};
+\node[wide, below=of qv] (react) {\textbf{Bounded ReAct Orchestrator} (\texttt{MAX\_REACT\_STEPS = 6})\\Whitelisted Action Selector $\mid$ Transient Retry $\le 1$ $\mid$ Approved Fallback Check};
+\node[half, below=0.55cm of react, xshift=-3.1cm] (tools) {\textbf{Structured Transaction Tools}\\Approved CSV/DB Filtering, Sample Counting,\\Deterministic Statistics, Optional ML/GIS};
+\node[half, below=0.55cm of react, xshift=3.1cm] (rag) {\textbf{RAG Domain-Knowledge Store}\\Official Data Dictionaries, Parking/Area Rules,\\Source ID, Version \& Effective-Date Tags};
+\node[wide, below=2.15cm of react] (gate) {\textbf{Evidence \& Safety Gate}\\Audit: Schema $\mid$ Measurement Unit $\mid$ Provenance $\mid$ Timeliness $\mid$ Scope\\Quarantine invalid results; isolate optional GIS/ML failures};
+\node[half, below=0.55cm of gate, xshift=-3.1cm, fill=green!7] (out) {\textbf{Cited Response Synthesis}\\Value + Scope + Date + Source + Limits};
+\node[half, below=0.55cm of gate, xshift=3.1cm, fill=red!7] (stop) {\textbf{Safe Stop Abstention}\\Zero Price Claims + Explicit Data-Gap Report};
 
-  Algorithm 1: Bounded Evidence-Gated Execution Control (PI)
-  ----------------------------------------------------------------------------
-  01: Validate user query and extract required typed fields
-  02: Repeat up to MAX_REACT_STEPS = 6: select a whitelisted action
-  03:     Invoke approved structured-data or RAG tool; retry transient error <= 1
-  04:     Validate schema, provenance, unit, dates, and scope; quarantine invalid
-  05: If no valid core transaction evidence exists: execute Safe Stop (no price claim)
-  06: Compute transaction statistics exclusively via deterministic code tools
-  07: Audit every numerical and regulatory claim against verified sources
-  08: Return cited answer with limitations; otherwise execute Safe Stop
-  ----------------------------------------------------------------------------
+\draw[arr] (ui) -- (qv);
+\draw[arr] (qv) -- (react);
+\draw[arr] (react.south -| tools.north) -- node[left, font=\tiny]{Structured Branch} (tools.north);
+\draw[arr] (react.south -| rag.north) -- node[right, font=\tiny]{Knowledge Branch} (rag.north);
+\draw[arr] (tools.south) -- (gate.north -| tools.south);
+\draw[arr] (rag.south) -- (gate.north -| rag.south);
+\draw[arr] (gate.south -| out.north) -- node[left, font=\tiny]{Pass (Valid Core)} (out.north);
+\draw[arr] (gate.south -| stop.north) -- node[right, font=\tiny]{Fail (Missing/Invalid)} (stop.north);
+\end{tikzpicture}
+\caption{Layered system architecture of the Taiwan Housing Intelligence Agent (PG).}
+\label{fig:arch}
+\end{figure*}
 
-F. Illustrative Walkthrough Example (PJ)
+% [PH: How, PI: Implementation / Flowchart & Pseudocode]
+\subsection{Operational Mechanism and Implementation Workflow}
+To achieve reliable decision support, every query traverses a deterministic pre-check, a bounded tool-routing loop, a mandatory gate audit, and an audited output renderer. Fig.~\ref{fig:flow} illustrates the end-to-end processing pipeline, and Table~\ref{tab:algo} specifies the bounded 8-step control pseudocode summarized from the repository's 30-line authoritative specification.
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+    node distance=0.35cm and 0.35cm,
+    stepbox/.style={draw, rounded corners=2pt, align=center, font=\scriptsize, fill=gray!5, inner sep=3.5pt, minimum width=2.0cm},
+    arr/.style={-{Stealth[length=2mm]}, semithick}
+]
+\node[stepbox] (q) {Query \& Condition Check};
+\node[stepbox, right=of q] (r) {ReAct Tool Selection};
+\node[stepbox, right=of r] (b) {Structured Tools / RAG};
+\node[stepbox, below=of b] (v) {Result Validation};
+\node[stepbox, left=of v] (s) {Deterministic Stats};
+\node[stepbox, left=of s] (g) {Evidence Gate};
+\node[stepbox, below=0.45cm of g, fill=green!7] (p) {Cited Output};
+\node[stepbox, below=0.45cm of s, fill=red!7] (f) {Safe Stop};
+
+\draw[arr] (q) -- (r);
+\draw[arr] (r) -- (b);
+\draw[arr] (b) -- (v);
+\draw[arr] (v) -- (s);
+\draw[arr] (s) -- (g);
+\draw[arr] (g) -- node[left, font=\tiny]{Pass} (p);
+\draw[arr] (g) -| node[above, near start, font=\tiny]{Fail} (f);
+\end{tikzpicture}
+\caption{End-to-end operational processing workflow (PI).}
+\label{fig:flow}
+\end{figure}
+
+\begin{table}[!t]
+\centering
+\caption{Bounded Evidence-Gated Execution Control Pseudocode (PI)}
+\label{tab:algo}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Line} & \textbf{Control Specification} \\
+\midrule
+01 & Validate user query and extract required typed fields. \\
+02 & Repeat up to \texttt{MAX\_REACT\_STEPS = 6}: choose a whitelisted action. \\
+03 & \quad Invoke approved structured-data or RAG tool; retry transient error $\le 1$. \\
+04 & \quad Validate schema, provenance, unit, dates, and scope; quarantine invalid. \\
+05 & If no valid core transaction evidence exists: execute Safe Stop (no price claim). \\
+06 & Compute transaction statistics exclusively via deterministic code tools. \\
+07 & Audit every numerical and regulatory claim against verified sources. \\
+08 & Return cited answer with limitations; otherwise execute Safe Stop. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% [PJ: Jump to an example]
+\subsection{Illustrative Walkthrough Example}
 To clarify runtime behavior, consider two contrasting queries over the Taichung City 115 Q3 baseline:
 
-1) Case 1 (Sufficient Evidence -> Cited Output): A user queries: "What is the median unit price of high-rise residential apartments (住宅大樓) in Xitun District within the 115 Q3 snapshot, and how do parking spaces affect interpretation?"
-- Query Validation parses {district: Xitun, period: 115 Q3 snapshot, building_type: high-rise apartment}.
-- Step 1 (Structured Tool) filters Dataset 103038 for matching candidates and deterministically computes sample count, median, and interquartile dispersion while flagging records containing bundled parking spaces.
-- Step 2 (RAG Tool) retrieves the official Actual Price Registration rule explaining that unbundling parking area and price alters computed unit price per ping.
-- Evidence Gate verifies schema match, Dataset 103038 provenance, publication-batch date semantics, and non-empty sample size.
-- Output Renderer emits all five required components: deterministic statistics, exact sample scope, snapshot batch date ("115 Q3" with ROC year-month caveat), Dataset 103038 + MOI rule citations, and explicit limitations (historical sample != individual home appraisal).
+\subsubsection{Case 1 (Sufficient Evidence $\rightarrow$ Cited Output)}
+A user asks: ``What is the median unit price of high-rise residential apartments in Xitun District within the 115 Q3 snapshot, and how do parking spaces affect interpretation?'' Query Validation extracts \{\textit{district}: Xitun, \textit{period}: 115 Q3 snapshot, \textit{building\_type}: high-rise apartment\}. Step~1 invokes the Structured Transaction Tool over Dataset~103038 to compute deterministic sample counts, medians, and dispersion while flagging bundled parking transactions. Step~2 invokes the RAG Store to retrieve the Actual Price Registration rule explaining how unbundling parking area and price alters computed unit price per ping. The Evidence Gate verifies schema match, Dataset~103038 provenance, publication-batch date semantics, and sufficient sample size, producing the mandatory five-part output (statistics, sample scope, batch date caveat, official citations, and limitations).
 
-2) Case 2 (Insufficient / Out-of-Scope Evidence -> Safe Stop): A user queries: "Predict the exact guaranteed selling price and mortgage return for Address X next quarter."
-- Query Validation flags personal financial return and guaranteed pricing as out-of-scope, while de-identified public records lack exact street-number coordinates and authorized multi-period national batch data.
-- Evidence Gate returns False for core evidence sufficiency and scope alignment; Algorithm 1 branches at Line 05 to Safe Stop, emitting zero price claims and detailing the exact data and authorization gaps.
+\subsubsection{Case 2 (Insufficient / Out-of-Scope Evidence $\rightarrow$ Safe Stop)}
+A user asks: ``Predict the exact guaranteed selling price and mortgage return for Street Address X next quarter.'' Query Validation flags personal financial return and guaranteed pricing as out-of-scope, while de-identified public records lack exact house-number coordinates and authorized multi-period national batch data. Because valid core evidence fails the Evidence Gate, Line~05 triggers Safe Stop, emitting zero price claims and reporting the exact scope and data-authorization gaps.
 
-G. Key Contributions and Experimental Linkage (PK, PL)
-The key contributions (PK) are: (1) treating abstention (Safe Stop) as a first-class architectural invariant rather than a prompt afterthought; (2) binding every LLM narrative claim to deterministic tool outputs; and (3) isolating optional GIS/ML failures from corrupting verified transaction comparisons. Later evaluation (PL) operationalizes these invariants across controlled comparisons against a fixed workflow on identical queries.
+% [PK: Key points contribution, PL: Later how to do simulation]
+\subsection{Key Contributions and Experimental Linkage}
+The key architectural contributions are threefold: (1) elevating abstention (Safe Stop) to a hard structural invariant rather than a soft prompt instruction; (2) binding every LLM narrative claim to deterministic tool outputs; and (3) isolating optional GIS/ML failures from corrupting verified transaction comparisons. These invariants directly feed our comparative experimental protocol in Section~IV, where gated ReAct + RAG is benchmarked against both ungated baselines and a fixed workflow.
 
-H. Mathematical Formulation (PM)
-Let q denote a user query parsed into typed constraints c = (d, tau, b, u), representing district d, time window tau, building typology b, and unit/parking specification u. Let A_safe be the finite whitelist of approved structured-data and RAG tools. Over reasoning steps t in {1, ..., T_max} with T_max = 6, the orchestrator generates an evidence trajectory E_t = {(a_i, o_i)}_{i=1}^t, where a_i in A_safe and o_i is the tool observation (retried at most once on transient failure).
+% [PM: Math proof / Formalization]
+\subsection{Mathematical Formulation}
+Let $q$ denote a user query parsed into typed constraints $c = (d, \tau, b, u)$, representing district $d$, time window $\tau$, building typology $b$, and unit/parking specification $u$. Let $\mathcal{A}_{\mathrm{safe}}$ be the finite whitelist of approved structured-data and RAG tools. Over reasoning steps $t \in \{1, \dots, T_{\max}\}$ with $T_{\max} = 6$, the orchestrator generates an evidence trajectory $E_t = \{(a_i, o_i)\}_{i=1}^{t}$, where $a_i \in \mathcal{A}_{\mathrm{safe}}$ and $o_i$ is the corresponding tool observation (retried at most once on transient error).
 
-Define a deterministic validity indicator v(o_i) in {0, 1} that equals 1 if and only if observation o_i passes schema validation S(o_i), provenance presence P(o_i), unit consistency U(o_i), temporal validity T(o_i), and spatial-scope alignment L(o_i):
-    v(o_i) = S(o_i) * P(o_i) * U(o_i) * T(o_i) * L(o_i).               (1)
+Define a deterministic observation validity indicator $v(o_i) \in \{0, 1\}$ that equals $1$ if and only if $o_i$ satisfies schema validation $S(o_i)$, provenance presence $P(o_i)$, unit consistency $U(o_i)$, temporal validity $T(o_i)$, and spatial-scope alignment $L(o_i)$:
+\begin{equation}
+v(o_i) = S(o_i) \cdot P(o_i) \cdot U(o_i) \cdot T(o_i) \cdot L(o_i).
+\end{equation}
+Let $E_{\mathrm{core}} \subseteq E_T$ denote the subset of validated core transaction observations with $v(o_i)=1$, and let $n(E_{\mathrm{core}})$ be the eligible sample size. The Evidence and Safety Gate predicate $G(E_T) \in \{0, 1\}$ is defined as:
+\begin{equation}
+\begin{split}
+G(E_T) = \mathbb{I}\!\Big[\, |E_{\mathrm{core}}| \ge 1 &\;\wedge\; n(E_{\mathrm{core}}) \ge n_{\min} \\
+&\;\wedge\; C_{\mathrm{audit}}(y_{\mathrm{draft}}, E_{\mathrm{core}}, E_{\mathrm{rag}}) = 1 \,\Big],
+\end{split}
+\end{equation}
+where $\mathbb{I}[\cdot]$ is the indicator function, $n_{\min}$ is the minimum sample threshold, and $C_{\mathrm{audit}}(\cdot) \in \{0,1\}$ verifies that every numerical and regulatory claim in candidate response $y_{\mathrm{draft}}$ maps to a verified item in $E_{\mathrm{core}} \cup E_{\mathrm{rag}}$. When $G(E_T)=0$, the system outputs $y_{\mathrm{stop}}$ (Safe Stop) with zero price claims.
 
-Let E_core subset E_T be the subset of validated core transaction observations satisfying v(o_i) = 1, and let n(E_core) denote the resulting eligible sample size. The Evidence and Safety Gate predicate G(E_T) in {0, 1} is defined as:
-    G(E_T) = I[ |E_core| >= 1 AND n(E_core) >= n_min AND C_audit(y_draft, E_core, E_rag) = 1 ],  (2)
-where I[.] is the indicator function, n_min is the minimum sample threshold, and C_audit(.) verifies that every numerical and regulatory claim in candidate response y_draft maps to a verified element in E_core union E_rag. When G(E_T) = 0, the system deterministically outputs y_stop (Safe Stop) with zero price claims.
+For an evaluation suite $\mathcal{Q} = \mathcal{Q}_{\mathrm{ans}} \cup \mathcal{Q}_{\mathrm{insuf}}$, system reliability is evaluated using the Safe Stop Rate ($\mathrm{SSR}$) on insufficient queries and Selective Citation Accuracy ($\mathrm{SCA}$) on non-abstained responses:
+\begin{equation}
+\mathrm{SSR} = \frac{1}{|\mathcal{Q}_{\mathrm{insuf}}|} \sum_{q \in \mathcal{Q}_{\mathrm{insuf}}} \mathbb{I}\!\left[G(E_T(q)) = 0\right],
+\end{equation}
+\begin{equation}
+\mathrm{SCA} = \frac{\sum_{q \in \mathcal{Q}} \mathbb{I}\!\left[G(E_T(q)) = 1 \;\wedge\; \mathrm{Sup}(y(q))\right]}{\sum_{q \in \mathcal{Q}} \mathbb{I}\!\left[G(E_T(q)) = 1\right]},
+\end{equation}
+where $\mathrm{Sup}(y(q))$ denotes that every claim in $y(q)$ is fully supported by verified evidence.
+By construction, any unverified numerical or regulatory claim yields $C_{\mathrm{audit}}(\cdot)=0$, forcing $G(E_T)=0$ prior to user delivery.
 
-Under this formulation, for an evaluation query set Q = Q_answerable union Q_insufficient, system reliability is measured via Safe Stop Rate on insufficient queries and Selective Citation Accuracy on non-abstained responses:
-    SSR = (1 / |Q_insufficient|) * sum_{q in Q_insufficient} I[G(E_T(q)) = 0],                  (3)
-    SCA = sum_{q in Q} I[G(E_T(q)) = 1 AND y(q) is fully supported] / sum_{q in Q} I[G(E_T(q)) = 1].  (4)
-This guarantees by construction that any unsupported claim violates C_audit(.) and forces G(E_T) = 0 prior to user delivery.
+\section{Experiment}
+% [Q: Quality and Quantity]
+\subsection{Quality and Quantity Performance Metrics}
+Under our two-layer evaluation framework, system quality and quantity are measured across two complementary metric suites:
+\begin{itemize}
+    \item \emph{Layer 1 (Data and Price Analytics)}: Sample coverage and completeness rates, descriptive statistics, Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and Coefficient of Determination ($R^2$) evaluated strictly under temporal and spatial holdouts.
+    \item \emph{Layer 2 (Agent Answer Reliability)}: Tool legality rate, citation support rate ($\mathrm{SCA}$), data timeliness compliance, unsupported price claim rate, Safe Stop rate on insufficient queries ($\mathrm{SSR}$), end-to-end latency, and tool/token execution cost.
+\end{itemize}
 
---------------------------------------------------------------------------------
-IV. EXPERIMENT
---------------------------------------------------------------------------------
-A. Quality and Quantity Performance Metrics (Q)
-Following the two-layer evaluation framework, system quality and quantity are measured across two complementary metric suites:
-1) Layer 1 (Data and Price Analytics): Sample coverage and completeness rates, descriptive statistics, Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and Coefficient of Determination (R^2) evaluated strictly under temporal and spatial holdouts.
-2) Layer 2 (Agent Answer Reliability): Tool legality rate, citation support rate (SCA), data timeliness compliance, unsupported price claim rate, Safe Stop rate on insufficient queries (SSR), end-to-end latency, and tool/token execution cost.
+% [R: Related Methods to Compare]
+\subsection{Related Methods for Comparison}
+To isolate architectural value without confirmation bias, two structured comparisons are established: (1) on Layer~1, a district/building-type median baseline versus linear regression and tree-based models (conditional on schema and label verification); and (2) on Layer~2, a fixed deterministic query workflow versus the proposed bounded ReAct + RAG orchestrator ($T_{\max} = 6$) over identical queries, snapshots, and knowledge bases.
 
-B. Related Methods for Comparison (R)
-To isolate architectural value without confirmation bias, two structured comparisons are defined:
-- Statistical Price Layer: District/building-type median baseline vs. linear regression and tree-based models (conditional on label and schema verification).
-- Agentic Workflow Layer: Fixed deterministic query workflow vs. the proposed bounded ReAct + RAG orchestrator (T_max = 6) executing over identical queries, data snapshots, and RAG knowledge bases.
+% [S: Simulation Setup, U: Useful Results (Completed Data Audit + Integrity Status)]
+\subsection{Experimental Setup and Completed Data Feasibility Results}
+The empirical baseline uses an official single-snapshot CSV from the Taichung City Government Land Administration Bureau for ROC Year 115 Q3 (Q3 2026), published on the Taiwan Government Open Data Platform (Dataset ID: 103038). Prior to model training or live agent benchmarking, we executed a complete data feasibility audit on Dataset~103038, summarized in Table~\ref{tab:audit}.
 
-C. Experimental Setup and Completed Data Feasibility Results (S, U)
-1) Experimental Setup (S): The empirical baseline uses an official single-snapshot CSV from the Taichung City Government Land Administration Bureau for ROC Year 115 Q3 (Q3 2026), published on the Taiwan Government Open Data Platform (Dataset ID: 103038).
-2) Completed Data Feasibility Results (U): Prior to training predictive models or executing live LLM agents, a complete data feasibility audit was executed on Dataset 103038. As detailed in Table III, the raw file contains 10,638 records across 32 fields, from which 9,152 residential candidate records were retained using researcher-defined transaction-target and building-type inclusion rules. Notably, 6,587 of the 10,638 raw records (61.9%) bundle land, building, and parking spaces together, confirming the practical necessity of explicit parking-unit caveats. Furthermore, date-code inspection shows that within the "115 Q3" publication batch, 8,302 raw records (7,592 residential candidates) carry date codes earlier than 2026 Q3 while 2,336 raw records (1,560 candidates) fall within 2026 Q3. Because ROC year-month coding semantics require official data-dictionary verification and public locations are de-identified, the audit concludes "Conditional Go"—authorizing controlled schema/inclusion review, not immediate valuation training.
+The raw snapshot contains 10,638 records across 32 fields, from which 9,152 residential candidate records were retained via researcher-defined transaction-target and building-type rules. Notably, 6,587 of the 10,638 raw records (61.9\%) bundle land, building, and parking spaces together, empirically confirming the necessity of explicit parking-unit caveats. Furthermore, date-code inspection shows that within the ``115 Q3'' publication batch, 8,302 raw records (7,592 residential candidates) carry date codes earlier than 2026 Q3 while 2,336 raw records (1,560 candidates) fall within 2026 Q3. Because ROC year-month coding semantics require official data-dictionary verification and public locations are de-identified, the audit concludes ``Conditional Go''---authorizing controlled schema and inclusion review rather than immediate valuation training.
 
-In strict adherence to academic integrity, live ML model training, ablation runs, and ReAct-vs-workflow benchmark execution have NOT yet been conducted; Table III reports only verified data-inventory measurements, and no synthetic Layer 1 or Layer 2 performance scores are claimed.
+In strict adherence to research integrity, live ML model training, ablation runs, and ReAct-vs-workflow benchmark execution have \emph{not} yet been conducted; Table~\ref{tab:audit} reports only verified data-inventory measurements, and no synthetic Layer~1 or Layer~2 performance scores are claimed.
 
-TABLE III
-COMPLETED DATA FEASIBILITY AUDIT: TAICHUNG CITY 115 Q3 SNAPSHOT (DATASET 103038)
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Audit Dimension             | Verified Inventory Result                        | Governance & Modeling Implication              |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Official Source             | Taichung City Land Admin. Bureau 115 Q3 CSV      | Single-snapshot baseline; national MOI batch   |
-|                             | (Open Data Platform Dataset ID: 103038)          | authorization not yet obtained                 |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Raw Snapshot Volume         | 10,638 records; 32 fields                        | Sufficient for schema and pilot verification   |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Residential Candidates      | 9,152 records (researcher-filtered subset)       | Not an official total municipal housing count  |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Raw Transaction Categories  | Land+Bldg+Parking: 6,587; Land+Bldg: 2,565;      | 61.9% include parking; mandates explicit       |
-|                             | Land: 1,377; Parking: 94; Building: 15 (=10,638) | unit-price/parking disclosure caveats          |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Candidate Building Types    | High-rise (住宅大樓): 5,933; Mid-rise (華廈):    | Covers four primary residential typologies for |
-|                             | 1,553; Townhouse (透天厝): 1,461; Walk-up: 205   | stratified comparison (= 9,152 total)          |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Date-Encoded Cohort Split   | Full: pre-2026 Q3 = 8,302 / Q3 = 2,336;          | "115 Q3" is batch release tag; ROC year-month  |
-|                             | Candidates: pre-2026 Q3 = 7,592 / Q3 = 1,560     | requires dictionary confirmation before split  |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
-| Feasibility Assessment      | CONDITIONAL GO                                   | Approves dictionary & rule audit; blocks       |
-|                             |                                                  | premature ML training or causal claims         |
-+-----------------------------+--------------------------------------------------+------------------------------------------------+
+\begin{table*}[!t]
+\centering
+\caption{Completed Data Feasibility Audit: Taichung City 115 Q3 Official Snapshot (Dataset 103038)}
+\label{tab:audit}
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}p{3.4cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Audit Dimension} & \textbf{Verified Inventory Result} & \textbf{Governance \& Modeling Implication} \\
+\midrule
+Official Source & Taichung City Land Administration Bureau 115 Q3 CSV (Open Data Platform Dataset ID: 103038) & Single-snapshot baseline; national MOI batch authorization not yet obtained \\
+Raw Snapshot Volume & 10,638 records across 32 fields & Sufficient for schema and pilot verification \\
+Residential Candidates & 9,152 records (researcher-filtered subset) & Not an official total municipal housing count \\
+Raw Transaction Categories & Land+Bldg+Parking: 6,587; Land+Bldg: 2,565; Land: 1,377; Parking: 94; Building: 15 (Total: 10,638) & 61.9\% include parking; mandates explicit unit-price and parking disclosure caveats \\
+Candidate Building Types & High-rise apt.: 5,933; Mid-rise apt.: 1,553; Townhouse: 1,461; Walk-up apt.: 205 (Total: 9,152) & Covers four primary residential typologies for stratified comparison \\
+Date-Encoded Cohort Split & Full file: pre-2026 Q3 = 8,302 / within Q3 = 2,336; Candidates: pre-2026 Q3 = 7,592 / within Q3 = 1,560 & ``115 Q3'' is a publication batch tag; ROC year-month semantics require official dictionary confirmation \\
+Feasibility Assessment & \textbf{CONDITIONAL GO} & Approves dictionary \& inclusion review; blocks premature ML training or causal claims \\
+\bottomrule
+\end{tabularx}
+\end{table*}
 
-D. Parameter Tuning Plan and Verification Protocol (T, V)
-Table IV defines the parameter tuning space (T) and verification protocol (V) scheduled prior to full-paper camera-ready submission. Specifically, we will test three falsifiable hypotheses: (H1) bounded ReAct + RAG achieves citation support at least comparable to the fixed workflow on complex multi-condition queries; (H2) the Evidence Gate reduces unsupported price claims relative to an ungated baseline; and (H3) if the fixed workflow matches ReAct reliability at lower latency and cost on standard queries, the fixed workflow will be recommended for routine deployment.
+% [T: Tuning Parameters, V: Verify Effectiveness]
+\subsection{Parameter Tuning Plan and Verification Protocol}
+Table~\ref{tab:protocol} defines the parameter tuning space and verification protocol scheduled prior to camera-ready submission. Specifically, we will test three falsifiable hypotheses:
+\begin{itemize}
+    \item \textbf{H1}: Bounded ReAct + RAG achieves citation support ($\mathrm{SCA}$) at least comparable to the fixed workflow on complex multi-condition queries.
+    \item \textbf{H2}: The Evidence and Safety Gate reduces unsupported price claims relative to an ungated ReAct baseline.
+    \item \textbf{H3}: If the fixed workflow matches ReAct reliability at lower latency and cost on standard queries, the fixed workflow will be reported and recommended for routine deployment.
+\end{itemize}
 
-TABLE IV
-PLANNED PARAMETER TUNING SPACE AND VERIFICATION PROTOCOL (PENDING EXECUTION)
-+---------------------------+----------------------------------------+------------------------------------------------+
-| Protocol Dimension        | Planned Configuration / Tuning Space   | Verification Target                            |
-+---------------------------+----------------------------------------+------------------------------------------------+
-| Agent Step & Retry Bounds | T_max in {3, 6, 9}; transient retry=1  | Latency-accuracy trade-off and loop safety     |
-| RAG Retrieval Parameters  | Top-k chunks in {3, 5, 8}; date filter | Regulatory citation support and freshness      |
-| Evidence Gate Thresholds  | Minimum sample n_min in {5, 10, 20}    | Safe Stop precision vs. coverage trade-off     |
-| Validation Split Design   | Temporal holdout + spatial holdout     | Leakage prevention across cohort dates         |
-| Ablation Baseline         | Gated ReAct vs. Ungated ReAct vs. Fixed| Direct test of H1–H3 without confirmation bias |
-+---------------------------+----------------------------------------+------------------------------------------------+
+\begin{table}[!t]
+\centering
+\caption{Planned Parameter Tuning Space and Verification Protocol (Pending)}
+\label{tab:protocol}
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\columnwidth}{@{}p{2.2cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Protocol Dimension} & \textbf{Planned Tuning Space} & \textbf{Verification Target} \\
+\midrule
+Agent Step \& Retry & $T_{\max} \in \{3, 6, 9\}$; retry $= 1$ & Latency-accuracy trade-off and loop safety \\
+RAG Retrieval & Top-$k \in \{3, 5, 8\}$; date filter & Regulatory citation support and freshness \\
+Gate Threshold & Minimum sample $n_{\min} \in \{5, 10, 20\}$ & Safe Stop precision vs.\ coverage trade-off \\
+Validation Splits & Temporal holdout + spatial holdout & Leakage prevention across cohort dates \\
+Ablation Baselines & Gated ReAct vs.\ Ungated vs.\ Fixed & Direct falsifiable test of H1--H3 \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
---------------------------------------------------------------------------------
-V. CONCLUSION
---------------------------------------------------------------------------------
-[W: What Proposed] This paper proposed the Taiwan Housing Intelligence Agent, a spec-driven, context-aware decision-support design grounded in the DIC3 OpenSpec framework to address unreliable point valuations and ungrounded LLM outputs in Taiwan's housing market. [X: eXcel] By combining a bounded ReAct orchestrator (MAX_REACT_STEPS = 6), deterministic structured-data computation, versioned regulatory RAG, and a mathematical Evidence and Safety Gate, the architecture excels in enforcing auditability, explicit sample/parking caveats, and fail-safe Safe Stop abstention whenever core evidence is absent or mismatched. [Y: Yields] Completed empirical work established a verified feasibility baseline on the Taichung City 115 Q3 official dataset (10,638 raw records -> 9,152 residential candidates; Conditional Go), exposed critical data hazards including 61.9% parking-bundled records and batch-versus-transaction date mismatches, and delivered a falsifiable two-layer evaluation protocol. [Z: Zen / Future Work] Because live model training and agent benchmarking remain pending, future work will complete the official ROC year-month data dictionary verification, execute the Layer 1 and Layer 2 comparative experiments (H1–H3) prior to the ICEIB 2027 final deadline, evaluate user comprehension of the five-part output contract, and pursue formal national MOI batch-data authorization while maintaining strict boundaries against personal financial, legal, or guaranteed-price claims.
+\section{Conclusion}
+% [W: What Proposed]
+This paper proposed the Taiwan Housing Intelligence Agent (THIA), a spec-driven, context-aware decision-support design grounded in the DIC3 OpenSpec framework to address unreliable point valuations and ungrounded LLM outputs in Taiwan's housing market.
+% [X: eXcel]
+By combining a bounded ReAct orchestrator (\texttt{MAX\_REACT\_STEPS = 6}), deterministic structured-data computation, versioned regulatory RAG, and a mathematical Evidence and Safety Gate, the architecture excels in enforcing auditability, explicit sample and parking caveats, and fail-safe Safe Stop abstention whenever core evidence is absent or mismatched.
+% [Y: Yields]
+Completed empirical work established a verified feasibility baseline on the Taichung City 115 Q3 official dataset (10,638 raw records $\rightarrow$ 9,152 residential candidates; ``Conditional Go''), exposed critical data hazards including 61.9\% parking-bundled records and batch-versus-transaction date mismatches, and delivered a falsifiable two-layer evaluation protocol.
+% [Z: Zen / Future Work]
+Because live model training and agent benchmarking remain pending, future work will complete the official ROC year-month data dictionary verification, execute the Layer~1 and Layer~2 comparative experiments (H1--H3) prior to the ICEIB 2027 final deadline, evaluate user comprehension of the five-part output contract, and pursue formal national MOI batch-data authorization while maintaining strict boundaries against personal financial, legal, or guaranteed-price claims.
 
---------------------------------------------------------------------------------
-REFERENCES
---------------------------------------------------------------------------------
-[Note: Entries [1]–[21], [23], and [24] reflect the exact bibliographic records compiled in the source proposal; full co-author lists, volume/page numbers, and DOIs should be verified against primary publications before final camera-ready submission.]
+\begin{thebibliography}{99}
 
-[1]  P.-Y. Wang et al., "Deep learning model for house price prediction using heterogeneous data analysis along with joint self-attention mechanism," IEEE Access, 2021.
-[2]  S.-M. Chiu et al., "Estate price prediction system based on temporal and spatial features and lightweight deep learning model," Appl. Intell., 2022.
-[3]  G.-Y. Wang, "The effect of environment on housing prices: Evidence from the Google Street View," J. Forecast., 2023.
-[4]  S.-C. Chou et al., "Application of mass appraisal models with time and space factors," J. Hous. Stud., 2023.
-[5]  C.-H. Hung et al., "The housing price dynamics and macroeconomic factors: Evidence of Taiwan housing market," Int. J. Strateg. Prop. Manag., 2025.
-[6]  Y. Yang, "Influence of a special tax-cooling measure on housing prices in Taiwan," Jpn. Econ. Rev., 2025.
-[7]  R.-I. Chang et al., "Housing price prediction using AI agent with causal inference for societal factor selection," IEEE Access, 2025.
-[8]  S. M. Lundberg and S.-I. Lee, "A unified approach to interpreting model predictions," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), 2017.
-[9]  D. R. Roberts et al., "Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure," Ecography, 2017.
-[10] M. D. Ecker and H. R. Isakson, "Cross-validation techniques for resampling housing sales," J. Prop. Tax Assess. Adm., 2022.
-[11] P. Lewis et al., "Retrieval-augmented generation for knowledge-intensive NLP tasks," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), 2020.
-[12] S. Yao et al., "ReAct: Synergizing reasoning and acting in language models," in Proc. Int. Conf. Learn. Represent. (ICLR), 2023.
-[13] T. Schick et al., "Toolformer: Language models can teach themselves to use tools," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), 2023.
-[14] Y. Shen et al., "HuggingGPT: Solving AI tasks with ChatGPT and its friends in Hugging Face," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), 2023.
-[15] L. Wang et al., "Plan-and-solve prompting: Improving zero-shot chain-of-thought reasoning by large language models," in Proc. Annu. Meeting Assoc. Comput. Linguist. (ACL), 2023.
-[16] B. Xu et al., "ReWOO: Decoupling reasoning from observations for efficient augmented language models," arXiv preprint, 2023.
-[17] N. Shinn et al., "Reflexion: Language agents with verbal reinforcement learning," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), 2023.
-[18] S. Yao et al., "Tree of thoughts: Deliberate problem solving with large language models," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), 2023.
-[19] S. Kim et al., "An LLM compiler for parallel function calling," in Proc. Int. Conf. Mach. Learn. (ICML), 2024.
-[20] K. R. Haurum et al., "Real estate with AI: An agent based on LangChain," Procedia Comput. Sci., 2024.
-[21] K. Zhu and Y. Han, "REAL: Benchmarking abilities of large language models for housing transactions and services," arXiv preprint, 2025.
-[22] Ministry of the Interior, R.O.C. (Taiwan), "Real Estate Actual Price Inquiry Service and Batch Open Data Portal," [Online]. Available: https://lvr.land.moi.gov.tw/jsp/qa.jsp and https://plvr.land.moi.gov.tw/DownloadOpenData (Accessed: Nov. 11, 2026).
-[23] C.-H. Lin, "Constructing a housing price prediction model with machine learning," M.S. thesis, National Central University (NCU), 2024.
-[24] T.-Y. Chang, "Predicting Taiwan housing price with machine learning methods," M.S. thesis, National Sun Yat-sen University (NSYSU), 2024.
+\bibitem{wang2021}
+P.-Y. Wang \emph{et al.}, ``Deep learning model for house price prediction using heterogeneous data analysis along with joint self-attention mechanism,'' \emph{IEEE Access}, 2021.
+
+\bibitem{chiu2022}
+S.-M. Chiu \emph{et al.}, ``Estate price prediction system based on temporal and spatial features and lightweight deep learning model,'' \emph{Appl. Intell.}, 2022.
+
+\bibitem{wang2023}
+G.-Y. Wang, ``The effect of environment on housing prices: Evidence from the Google Street View,'' \emph{J. Forecast.}, 2023.
+
+\bibitem{chou2023}
+S.-C. Chou \emph{et al.}, ``Application of mass appraisal models with time and space factors,'' \emph{J. Hous. Stud.}, 2023.
+
+\bibitem{hung2025}
+C.-H. Hung \emph{et al.}, ``The housing price dynamics and macroeconomic factors: Evidence of Taiwan housing market,'' \emph{Int. J. Strateg. Prop. Manag.}, 2025.
+
+\bibitem{yang2025}
+Y. Yang, ``Influence of a special tax-cooling measure on housing prices in Taiwan,'' \emph{Jpn. Econ. Rev.}, 2025.
+
+\bibitem{chang2025}
+R.-I. Chang \emph{et al.}, ``Housing price prediction using AI agent with causal inference for societal factor selection,'' \emph{IEEE Access}, 2025.
+
+\bibitem{lundberg2017}
+S. M. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2017.
+
+\bibitem{roberts2017}
+D. R. Roberts \emph{et al.}, ``Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure,'' \emph{Ecography}, 2017.
+
+\bibitem{ecker2022}
+M. D. Ecker and H. R. Isakson, ``Cross-validation techniques for resampling housing sales,'' \emph{J. Prop. Tax Assess. Adm.}, 2022.
+
+\bibitem{lewis2020}
+P. Lewis \emph{et al.}, ``Retrieval-augmented generation for knowledge-intensive NLP tasks,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2020.
+
+\bibitem{yao2023react}
+S. Yao \emph{et al.}, ``ReAct: Synergizing reasoning and acting in language models,'' in \emph{Proc. Int. Conf. Learn. Represent. (ICLR)}, 2023.
+
+\bibitem{schick2023}
+T. Schick \emph{et al.}, ``Toolformer: Language models can teach themselves to use tools,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2023.
+
+\bibitem{shen2023}
+Y. Shen \emph{et al.}, ``HuggingGPT: Solving AI tasks with ChatGPT and its friends in Hugging Face,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2023.
+
+\bibitem{wang2023plan}
+L. Wang \emph{et al.}, ``Plan-and-solve prompting: Improving zero-shot chain-of-thought reasoning by large language models,'' in \emph{Proc. Annu. Meeting Assoc. Comput. Linguist. (ACL)}, 2023.
+
+\bibitem{xu2023}
+B. Xu \emph{et al.}, ``ReWOO: Decoupling reasoning from observations for efficient augmented language models,'' \emph{arXiv preprint}, 2023.
+
+\bibitem{shinn2023}
+N. Shinn \emph{et al.}, ``Reflexion: Language agents with verbal reinforcement learning,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2023.
+
+\bibitem{yao2023tot}
+S. Yao \emph{et al.}, ``Tree of thoughts: Deliberate problem solving with large language models,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2023.
+
+\bibitem{kim2024}
+S. Kim \emph{et al.}, ``An LLM compiler for parallel function calling,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2024.
+
+\bibitem{haurum2024}
+K. R. Haurum \emph{et al.}, ``Real estate with AI: An agent based on LangChain,'' \emph{Procedia Comput. Sci.}, 2024.
+
+\bibitem{zhu2025}
+K. Zhu and Y. Han, ``REAL: Benchmarking abilities of large language models for housing transactions and services,'' \emph{arXiv preprint}, 2025.
+
+\bibitem{moi2026}
+Ministry of the Interior, R.O.C. (Taiwan), ``Real Estate Actual Price Inquiry Service and Batch Open Data Portal,'' [Online]. Available: \url{https://lvr.land.moi.gov.tw/jsp/qa.jsp} and \url{https://plvr.land.moi.gov.tw/DownloadOpenData} (Accessed: Nov. 11, 2026).
+
+\bibitem{lin2024}
+C.-H. Lin, ``Constructing a housing price prediction model with machine learning,'' M.S. thesis, National Central University (NCU), 2024.
+
+\bibitem{chang2024}
+T.-Y. Chang, ``Predicting Taiwan housing price with machine learning methods,'' M.S. thesis, National Sun Yat-sen University (NSYSU), 2024.
+
+\end{thebibliography}
+
+\end{document}
